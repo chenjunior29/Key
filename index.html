@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>iseeic.tw ｜ 超薄門禁感應貼片．把磁扣整合進手機</title>
+<meta name="description" content="iseeic.tw 超薄約 0.8mm 門禁感應貼片，貼上手機就是你的磁扣，出門不用再多帶卡。社區、辦公室、電梯權限皆適用。IG：@iseeic.tw" />
+<style>
+  :root{
+    --bg-0:#03060f;
+    --bg-1:#070d1f;
+    --bg-2:#0a1430;
+    --line:#1b2a55;
+    --cyan:#00e6ff;
+    --cyan-soft:#7df0ff;
+    --blue:#2f78ff;
+    --violet:#7a5cff;
+    --text:#e7f1ff;
+    --muted:#8aa0c8;
+    --warn:#ffb648;
+    --shadow-cyan: 0 0 30px rgba(0,230,255,.45), 0 0 60px rgba(47,120,255,.25);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:var(--bg-0);color:var(--text);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;}
+  body{
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(47,120,255,.25), transparent 60%),
+      radial-gradient(900px 600px at -10% 40%, rgba(0,230,255,.15), transparent 60%),
+      radial-gradient(800px 600px at 50% 110%, rgba(122,92,255,.18), transparent 60%),
+      var(--bg-0);
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  img,svg{display:block;max-width:100%;}
+
+  /* Grid backdrop */
+  .grid-bg{
+    position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35;
+    background-image:
+      linear-gradient(rgba(0,230,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,230,255,.08) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(circle at 50% 30%, #000 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(circle at 50% 30%, #000 20%, transparent 75%);
+  }
+
+  /* Nav */
+  nav{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter: blur(10px);
+    background: rgba(7,13,31,.6);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1200px;margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.5px;}
+  .brand-mark{
+    width:28px;height:28px;border-radius:50%;
+    background: conic-gradient(from 220deg, var(--cyan), var(--violet), var(--blue), var(--cyan));
+    box-shadow: var(--shadow-cyan);
+  }
+  .brand-name{font-size:15px;}
+  .brand-name span{color:var(--cyan);}
+  .nav-links{display:flex;gap:22px;font-size:14px;color:var(--muted);}
+  .nav-links a:hover{color:var(--cyan);}
+  .nav-cta{
+    padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;
+    background:linear-gradient(135deg,var(--cyan),var(--blue));
+    color:#001220;
+    box-shadow: 0 6px 20px rgba(0,230,255,.35);
+    transition:transform .2s ease;
+  }
+  .nav-cta:hover{transform:translateY(-1px);}
+  @media(max-width:720px){ .nav-links{display:none;} }
+
+  main{position:relative;z-index:1;}
+  section{max-width:1200px;margin:0 auto;padding:90px 24px;}
+  @media(max-width:720px){ section{padding:60px 20px;} }
+
+  /* HERO */
+  .hero{display:grid;grid-template-columns:1.1fr 1fr;gap:50px;align-items:center;padding-top:70px;}
+  @media(max-width:960px){ .hero{grid-template-columns:1fr;gap:40px;} }
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px;border-radius:999px;
+    border:1px solid rgba(0,230,255,.35);
+    background:rgba(0,230,255,.08);
+    color:var(--cyan-soft);font-size:13px;font-weight:600;letter-spacing:.5px;
+  }
+  .pill .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+  .hero h1{
+    font-size: clamp(34px, 5vw, 58px);
+    line-height:1.15;
+    margin:18px 0 14px;
+    font-weight:900;
+    letter-spacing:-.5px;
+  }
+  .hero h1 .grad{
+    background: linear-gradient(120deg, #fff 0%, var(--cyan) 50%, var(--blue) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero .lead{
+    color:var(--muted);font-size:18px;max-width:560px;margin-bottom:14px;
+  }
+  .hero .slogan{
+    color:#cfe2ff;font-size:18px;font-weight:600;margin-bottom:30px;
+    border-left:3px solid var(--cyan);padding-left:14px;
+  }
+  .hero .slogan b{color:var(--cyan);}
+  .cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:28px;}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 22px;border-radius:14px;font-weight:700;font-size:15px;
+    transition:transform .2s ease, box-shadow .2s ease;
+    cursor:pointer;border:none;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--cyan),var(--blue));
+    color:#001220;
+    box-shadow:0 10px 30px rgba(0,230,255,.35);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,230,255,.5);}
+  .btn-line{
+    background:#06C755;color:#fff;
+    box-shadow:0 10px 30px rgba(6,199,85,.35);
+  }
+  .btn-line:hover{transform:translateY(-2px);}
+  .btn-ig{
+    background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+    color:#fff;box-shadow:0 10px 30px rgba(220,39,67,.35);
+  }
+  .btn-ig:hover{transform:translateY(-2px);}
+  .btn-ghost{
+    background:transparent;color:var(--text);border:1px solid var(--line);
+  }
+  .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
+
+  .hero-meta{display:flex;flex-wrap:wrap;gap:22px;color:var(--muted);font-size:14px;}
+  .hero-meta b{color:#fff;}
+
+  /* Phone illustration */
+  .stage{
+    position:relative;aspect-ratio: 1/1;max-width:520px;margin:0 auto;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .ring{
+    position:absolute;border-radius:50%;
+    border:1px solid rgba(0,230,255,.2);
+    animation: spin 30s linear infinite;
+  }
+  .ring.r1{inset:6%;border-style:dashed;}
+  .ring.r2{inset:14%;animation-direction:reverse;animation-duration:50s;}
+  .ring.r3{inset:22%;border-color:rgba(122,92,255,.25);}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .glow-orb{
+    position:absolute;width:60%;height:60%;border-radius:50%;
+    background: radial-gradient(closest-side, rgba(0,230,255,.35), rgba(47,120,255,.05) 70%, transparent);
+    filter: blur(8px);
+    animation: orb 6s ease-in-out infinite alternate;
+  }
+  .hero-poster{
+    position:relative;z-index:2;
+    width:92%;height:auto;max-height:560px;object-fit:contain;
+    border-radius:22px;
+    box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 60px rgba(0,230,255,.2);
+    border:1px solid rgba(0,230,255,.25);
+    background: rgba(7,13,31,.4);
+  }
+  @keyframes orb{from{transform:scale(.95);}to{transform:scale(1.05);}}
+
+  /* Wave for phone-to-reader */
+  .wave{
+    position:absolute;border:2px solid var(--cyan);border-radius:50%;
+    width:30px;height:30px;opacity:0;
+    animation: wave 2.4s linear infinite;
+  }
+  .wave.w2{animation-delay:.8s;}
+  .wave.w3{animation-delay:1.6s;}
+  @keyframes wave{
+    0%{transform:scale(.5);opacity:0;}
+    20%{opacity:.9;}
+    100%{transform:scale(5);opacity:0;}
+  }
+
+  /* Sticker spec */
+  .spec-row{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;
+  }
+  @media(max-width:720px){.spec-row{grid-template-columns:repeat(3,1fr);gap:10px;}}
+  .spec{
+    border:1px solid var(--line);border-radius:14px;padding:14px;
+    background:rgba(10,20,48,.45);
+    text-align:center;
+  }
+  .spec b{display:block;color:var(--cyan);font-size:18px;}
+  .spec span{color:var(--muted);font-size:12px;}
+
+  /* Section heading */
+  .sec-head{text-align:center;margin-bottom:50px;}
+  .sec-head .pill{margin-bottom:14px;}
+  .sec-head h2{
+    font-size: clamp(26px, 3.4vw, 40px);font-weight:900;letter-spacing:-.5px;
+  }
+  .sec-head p{color:var(--muted);margin-top:10px;max-width:620px;margin-inline:auto;}
+
+  /* Features */
+  .features{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  @media(max-width:960px){.features{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:520px){.features{grid-template-columns:1fr;}}
+  .feature{
+    position:relative;padding:24px;border-radius:18px;
+    background:linear-gradient(180deg, rgba(15,25,55,.7), rgba(7,13,31,.7));
+    border:1px solid var(--line);
+    overflow:hidden;
+    transition:transform .3s ease, border-color .3s ease;
+  }
+  .feature:hover{transform:translateY(-4px);border-color:rgba(0,230,255,.5);}
+  .feature::before{
+    content:"";position:absolute;inset:-1px;border-radius:18px;padding:1px;
+    background:linear-gradient(135deg, rgba(0,230,255,.4), transparent 50%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events:none;opacity:0;transition:opacity .3s;
+  }
+  .feature:hover::before{opacity:1;}
+  .icon-wrap{
+    width:48px;height:48px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(0,230,255,.1);border:1px solid rgba(0,230,255,.3);
+    margin-bottom:14px;color:var(--cyan);
+  }
+  .feature h3{font-size:17px;margin-bottom:6px;}
+  .feature p{color:var(--muted);font-size:14px;}
+
+  /* Scenarios */
+  .scenarios{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  @media(max-width:720px){.scenarios{grid-template-columns:1fr;}}
+  .scene{
+    padding:30px 24px;border-radius:20px;text-align:center;
+    background:linear-gradient(180deg, rgba(15,25,55,.7), rgba(7,13,31,.7));
+    border:1px solid var(--line);
+  }
+  .scene .scene-icon{
+    width:72px;height:72px;margin:0 auto 16px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(closest-side, rgba(0,230,255,.25), transparent 75%);
+    color:var(--cyan-soft);
+  }
+  .scene h3{font-size:20px;margin-bottom:6px;}
+  .scene p{color:var(--muted);font-size:14px;}
+
+  /* How it works */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative;}
+  @media(max-width:720px){.steps{grid-template-columns:1fr;}}
+  .step{
+    padding:28px 22px;border-radius:18px;
+    border:1px solid var(--line);background:rgba(10,20,48,.45);
+    position:relative;
+  }
+  .step .num{
+    position:absolute;top:-18px;left:22px;
+    width:42px;height:42px;border-radius:50%;
+    background:linear-gradient(135deg,var(--cyan),var(--blue));
+    color:#001220;font-weight:900;font-size:18px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 20px rgba(0,230,255,.4);
+  }
+  .step h3{margin-top:18px;font-size:18px;margin-bottom:6px;}
+  .step p{color:var(--muted);font-size:14px;}
+
+  /* Pricing */
+  .pricing-wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:30px;align-items:stretch;}
+  @media(max-width:960px){.pricing-wrap{grid-template-columns:1fr;}}
+  .price-card{
+    padding:36px;border-radius:24px;
+    background:
+      radial-gradient(600px 300px at 80% -20%, rgba(0,230,255,.25), transparent 60%),
+      linear-gradient(180deg, rgba(20,35,80,.85), rgba(7,13,31,.85));
+    border:1px solid rgba(0,230,255,.35);
+    position:relative;overflow:hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  }
+  .price-card::after{
+    content:"";position:absolute;inset:0;border-radius:24px;
+    background:linear-gradient(135deg, rgba(0,230,255,.3), transparent 60%);
+    pointer-events:none;mix-blend-mode:overlay;opacity:.3;
+  }
+  .price-card .label{color:var(--cyan-soft);font-size:13px;letter-spacing:2px;font-weight:700;}
+  .price-card h3{font-size:26px;margin:8px 0 14px;}
+  .price-card .price{display:flex;align-items:baseline;gap:8px;margin:10px 0 18px;}
+  .price-card .price .num{font-size:64px;font-weight:900;background:linear-gradient(120deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .price-card .price .unit{color:var(--muted);font-size:16px;}
+  .price-card .desc{color:var(--muted);margin-bottom:20px;}
+  .price-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+  .price-list li{display:flex;align-items:flex-start;gap:10px;color:#dbe7ff;}
+  .price-list li::before{
+    content:"";flex:none;width:18px;height:18px;border-radius:50%;
+    background:rgba(0,230,255,.15);border:1.5px solid var(--cyan);
+    background-image: linear-gradient(135deg, transparent 35%, var(--cyan) 35% 65%, transparent 65%);
+    margin-top:4px;
+  }
+
+  .info-card{
+    padding:30px;border-radius:24px;
+    background:linear-gradient(180deg, rgba(15,25,55,.7), rgba(7,13,31,.7));
+    border:1px solid var(--line);
+  }
+  .info-card h4{font-size:18px;margin-bottom:14px;color:var(--cyan-soft);}
+  .info-block{padding:14px 0;border-top:1px dashed var(--line);}
+  .info-block:first-of-type{border-top:none;padding-top:0;}
+  .info-block .t{color:#fff;font-weight:700;margin-bottom:4px;font-size:15px;}
+  .info-block .d{color:var(--muted);font-size:14px;}
+
+  /* CTA banner */
+  .cta-band{
+    margin:0 auto;max-width:1200px;
+    border-radius:28px;padding:48px;
+    background:
+      radial-gradient(800px 300px at 50% 0%, rgba(0,230,255,.25), transparent 60%),
+      linear-gradient(135deg,#0a1638 0%, #14246d 100%);
+    border:1px solid rgba(0,230,255,.4);
+    text-align:center;position:relative;overflow:hidden;
+  }
+  .cta-band h2{font-size:clamp(24px,3vw,36px);font-weight:900;margin-bottom:10px;}
+  .cta-band p{color:#cfe2ff;margin-bottom:24px;}
+  .cta-band .cta-row{justify-content:center;}
+  @media(max-width:720px){.cta-band{padding:36px 22px;}}
+
+  /* FAQ-ish notice */
+  .notice{
+    margin-top:30px;padding:18px 22px;border-radius:14px;
+    background:rgba(255,182,72,.08);
+    border:1px solid rgba(255,182,72,.35);
+    color:#ffd9a0;font-size:13px;
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  .notice b{color:var(--warn);}
+
+  /* Footer */
+  footer{
+    padding:40px 24px 60px;border-top:1px solid var(--line);
+    color:var(--muted);font-size:13px;text-align:center;
+    margin-top:80px;
+  }
+  footer .brand{justify-content:center;margin-bottom:10px;}
+
+  /* Reveal animation */
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease, transform .8s ease;}
+  .reveal.in{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div class="brand-name">iseeic<span>.tw</span></div>
+    </div>
+    <div class="nav-links">
+      <a href="#features">產品優勢</a>
+      <a href="#pricing">價格</a>
+      <a href="https://www.instagram.com/iseeic.tw/" target="_blank" rel="noopener">@iseeic.tw</a>
+    </div>
+    <a class="nav-cta" href="#contact">立即洽詢</a>
+  </div>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <span class="pill"><span class="dot"></span>0.8mm 超薄設計｜貼上即感應</span>
+      <h1>把門禁磁扣<br/><span class="grad">整合進你的手機</span></h1>
+      <div class="slogan">
+        又忘記帶鑰匙磁扣？<br/>
+        但你<b>不可能忘記帶手機吧？</b>
+      </div>
+      <p class="lead">超薄貼片設計，輕薄好貼。一張貼紙取代社區、辦公室、電梯磁扣，從此出門不用再多帶一張卡。</p>
+
+      <div class="cta-row">
+        <a class="btn btn-ig" href="https://www.instagram.com/iseeic.tw/" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          IG 私訊 @iseeic.tw
+        </a>
+        <a class="btn btn-line" href="#contact">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596a.62.62 0 0 1-.197.033c-.21 0-.4-.117-.51-.281l-2.443-3.317v2.969a.629.629 0 0 1-.629.628.627.627 0 0 1-.626-.628V8.108c0-.27.173-.51.43-.595a.625.625 0 0 1 .195-.033c.196 0 .397.105.508.275l2.443 3.32V8.108a.629.629 0 0 1 .628-.63c.345 0 .628.285.628.63v4.771zm-5.741 0a.627.627 0 0 1-.626.628.629.629 0 0 1-.63-.628V8.108c0-.345.282-.63.63-.63.346 0 .626.285.626.63v4.771zm-2.466.628H4.917a.625.625 0 0 1-.625-.628V8.108c0-.345.281-.63.625-.63.346 0 .628.285.628.63v4.141h1.756c.348 0 .629.283.629.63a.627.627 0 0 1-.629.628M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+          LINE 加好友
+        </a>
+        <a class="btn btn-ghost" href="#pricing">查看價格</a>
+      </div>
+
+      <div class="hero-meta">
+        <div>＋ <b>合法授權</b>使用</div>
+        <div>＋ <b>大台北</b>到府服務</div>
+        <div>＋ <b>新社區</b>揪團優惠</div>
+      </div>
+
+      <div class="spec-row">
+        <div class="spec"><b>0.8mm</b><span>超薄厚度</span></div>
+        <div class="spec"><b>NT$200</b><span>均一價／片</span></div>
+        <div class="spec"><b>3 場景</b><span>社區・辦公室・電梯</span></div>
+      </div>
+    </div>
+
+    <!-- Hero visual: 海報圖 + 動畫光環  -->
+    <div class="stage">
+      <div class="ring r1"></div>
+      <div class="ring r2"></div>
+      <div class="ring r3"></div>
+      <div class="glow-orb"></div>
+      <!-- 主視覺海報：把圖檔放到 images/hero-poster.png 即可顯示；找不到圖時自動 fallback 到內建 SVG -->
+      <img src="images/hero-poster.png" alt="超薄門禁感應貼片整合手機示意"
+           class="hero-poster"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='block';"/>
+      <svg viewBox="0 0 600 500" width="100%" class="hero-svg" style="display:none;position:relative;z-index:2;filter: drop-shadow(0 25px 50px rgba(0,0,0,.6));" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="phoneCase" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="rgba(255,255,255,.22)"/>
+            <stop offset=".5" stop-color="rgba(180,210,255,.08)"/>
+            <stop offset="1" stop-color="rgba(255,255,255,.22)"/>
+          </linearGradient>
+          <linearGradient id="caseEdge" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="rgba(255,255,255,.6)"/>
+            <stop offset=".5" stop-color="rgba(180,210,255,.3)"/>
+            <stop offset="1" stop-color="rgba(255,255,255,.6)"/>
+          </linearGradient>
+          <radialGradient id="sticker" cx="35%" cy="35%" r="65%">
+            <stop offset="0" stop-color="#f5f8ff"/>
+            <stop offset=".5" stop-color="#b9c7d8"/>
+            <stop offset="1" stop-color="#5d6c80"/>
+          </radialGradient>
+          <linearGradient id="reader" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#2a3768"/>
+            <stop offset=".5" stop-color="#0a1130"/>
+            <stop offset="1" stop-color="#1a2548"/>
+          </linearGradient>
+          <linearGradient id="readerEdge" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#5a6a90"/>
+            <stop offset=".5" stop-color="#1a2548"/>
+            <stop offset="1" stop-color="#5a6a90"/>
+          </linearGradient>
+          <linearGradient id="doorPanel" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#3a4668"/>
+            <stop offset=".5" stop-color="#1a2548"/>
+            <stop offset="1" stop-color="#0a1130"/>
+          </linearGradient>
+          <radialGradient id="doorInterior" cx="50%" cy="40%" r="65%">
+            <stop offset="0" stop-color="#7df0ff" stop-opacity=".95"/>
+            <stop offset=".5" stop-color="#00ff88" stop-opacity=".7"/>
+            <stop offset="1" stop-color="#003322" stop-opacity=".4"/>
+          </radialGradient>
+          <radialGradient id="nfcCenter" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="#7df0ff" stop-opacity=".85"/>
+            <stop offset=".6" stop-color="#00e6ff" stop-opacity=".4"/>
+            <stop offset="1" stop-color="#0a4a8a" stop-opacity=".15"/>
+          </radialGradient>
+          <linearGradient id="readerScreen" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#1a2548"/>
+            <stop offset=".5" stop-color="#050a1a"/>
+            <stop offset="1" stop-color="#0a1130"/>
+          </linearGradient>
+        </defs>
+
+        <!-- ============== DOOR (RIGHT side, slides open to reveal ISEEIC logo) ============== -->
+        <g transform="translate(380,110)">
+          <!-- frame -->
+          <rect x="-10" y="-10" width="220" height="270" fill="rgba(0,0,0,.55)" stroke="rgba(255,255,255,.22)" stroke-width="2" rx="5"/>
+          <rect x="-10" y="246" width="220" height="14" fill="rgba(20,30,55,.7)" stroke="rgba(255,255,255,.15)"/>
+
+          <!-- ===== LOCK / OPEN STATUS INDICATOR above door ===== -->
+          <g transform="translate(50,-58)">
+            <!-- outer panel housing -->
+            <rect x="-2" y="-2" width="104" height="40" rx="8" fill="#050a18" stroke="rgba(255,255,255,.25)" stroke-width="1.5"/>
+            <!-- inner recessed screen -->
+            <rect x="3" y="3" width="94" height="30" rx="4" fill="#000" stroke="rgba(255,255,255,.08)"/>
+            <!-- subtle vertical accent strips -->
+            <line x1="8" y1="6" x2="8" y2="30" stroke="rgba(255,255,255,.1)" stroke-width="0.5"/>
+            <line x1="92" y1="6" x2="92" y2="30" stroke="rgba(255,255,255,.1)" stroke-width="0.5"/>
+
+            <!-- LOCK state (red neon, before sensing) -->
+            <g>
+              <animate attributeName="opacity" values="1;0;1" keyTimes="0;0.42;0.92" dur="5s" repeatCount="indefinite" calcMode="discrete"/>
+              <!-- lock icon -->
+              <g transform="translate(20,18)">
+                <path d="M -5 -2 Q -5 -10 0 -10 Q 5 -10 5 -2 L 5 0" fill="none" stroke="#ff2d55" stroke-width="1.8" style="filter:drop-shadow(0 0 3px #ff2d55);"/>
+                <rect x="-7" y="-1" width="14" height="11" rx="1.5" fill="rgba(255,45,85,.15)" stroke="#ff2d55" stroke-width="1.5" style="filter:drop-shadow(0 0 3px #ff2d55);"/>
+                <circle cx="0" cy="3" r="1.3" fill="#ff2d55"/>
+              </g>
+              <!-- LOCK text with red neon glow -->
+              <text x="62" y="24" text-anchor="middle" font-size="14" font-family="'Arial Black', sans-serif" font-weight="900" letter-spacing="3" fill="#ff2d55" style="filter:drop-shadow(0 0 4px #ff2d55) drop-shadow(0 0 8px #ff2d55);">LOCK</text>
+              <!-- pulsing red dot -->
+              <circle cx="92" cy="18" r="2" fill="#ff2d55" style="filter:drop-shadow(0 0 3px #ff2d55);">
+                <animate attributeName="opacity" values="1;0.3;1" dur="1.2s" repeatCount="indefinite"/>
+              </circle>
+            </g>
+
+            <!-- OPEN state (green neon, after sensing) -->
+            <g opacity="0">
+              <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.42;0.92" dur="5s" repeatCount="indefinite" calcMode="discrete"/>
+              <!-- unlock icon -->
+              <g transform="translate(20,18)">
+                <path d="M -5 -2 Q -5 -10 0 -10 Q 5 -10 5 -2" fill="none" stroke="#00ff66" stroke-width="1.8" style="filter:drop-shadow(0 0 3px #00ff66);"/>
+                <rect x="-7" y="-1" width="14" height="11" rx="1.5" fill="rgba(0,255,102,.15)" stroke="#00ff66" stroke-width="1.5" style="filter:drop-shadow(0 0 3px #00ff66);"/>
+                <circle cx="0" cy="3" r="1.3" fill="#00ff66"/>
+              </g>
+              <!-- OPEN text with green neon glow -->
+              <text x="62" y="24" text-anchor="middle" font-size="14" font-family="'Arial Black', sans-serif" font-weight="900" letter-spacing="3" fill="#00ff66" style="filter:drop-shadow(0 0 4px #00ff66) drop-shadow(0 0 8px #00ff66);">OPEN</text>
+              <!-- solid green dot -->
+              <circle cx="92" cy="18" r="2" fill="#00ff66" style="filter:drop-shadow(0 0 3px #00ff66);"/>
+            </g>
+          </g>
+
+          <!-- INTERIOR (dark with subtle green glow, matrix-style) -->
+          <rect x="0" y="0" width="200" height="240" fill="#000805" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;0;0"
+              keyTimes="0;0.56;0.6;0.68;0.8;0.88;1" dur="5s" repeatCount="indefinite"/>
+          </rect>
+          <radialGradient id="logoGlow" cx="50%" cy="40%" r="60%">
+            <stop offset="0" stop-color="#00ff50" stop-opacity=".25"/>
+            <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+          </radialGradient>
+          <rect x="0" y="0" width="200" height="240" fill="url(#logoGlow)" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;0;0"
+              keyTimes="0;0.56;0.6;0.68;0.8;0.88;1" dur="5s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- ===== ISEEIC LOGO inside (revealed when doors open) ===== -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;0;0"
+              keyTimes="0;0.58;0.62;0.7;0.8;0.88;1" dur="5s" repeatCount="indefinite"/>
+            <!-- Shield -->
+            <g transform="translate(100,0)">
+              <path d="M -28 30 L 0 22 L 28 30 L 28 60 Q 28 88 0 102 Q -28 88 -28 60 Z"
+                    fill="rgba(0,255,80,.08)" stroke="#00ff50" stroke-width="2.5" stroke-linejoin="round"
+                    style="filter: drop-shadow(0 0 6px #00ff50);"/>
+              <!-- Lock inside shield -->
+              <g transform="translate(0,67)">
+                <path d="M -8 -3 Q -8 -14 0 -14 Q 8 -14 8 -3 L 8 0"
+                      fill="none" stroke="#00ff50" stroke-width="2.5"/>
+                <rect x="-10" y="-2" width="20" height="14" rx="2"
+                      fill="rgba(0,255,80,.12)" stroke="#00ff50" stroke-width="2"/>
+                <circle cx="0" cy="3" r="1.8" fill="#00ff50"/>
+                <line x1="0" y1="3" x2="0" y2="9" stroke="#00ff50" stroke-width="1.6"/>
+              </g>
+              <!-- "Security" -->
+              <text x="0" y="128" text-anchor="middle" font-size="14" fill="#00ff50"
+                    font-family="sans-serif" font-weight="700" letter-spacing=".5">Security</text>
+              <!-- "ISEEIC" big -->
+              <text x="0" y="166" text-anchor="middle" font-size="26" fill="#fff"
+                    font-family="Impact, 'Arial Black', sans-serif" font-weight="900" letter-spacing="3">ISEEIC</text>
+              <!-- tagline -->
+              <text x="0" y="186" text-anchor="middle" font-size="7.5" fill="#cfe9d8"
+                    font-family="sans-serif" letter-spacing=".3">Keyless Freedom, Securely Yours.</text>
+            </g>
+          </g>
+
+          <!-- threshold green strip -->
+          <rect x="0" y="237" width="200" height="3" fill="#00ff50" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0"
+              keyTimes="0;0.56;0.62;0.8;0.88;1" dur="5s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- LEFT door panel slides left (simple original design) -->
+          <g>
+            <animateTransform attributeName="transform" type="translate"
+              values="0 0; 0 0; -85 0; -85 0; 0 0; 0 0"
+              keyTimes="0; 0.56; 0.7; 0.8; 0.88; 1"
+              dur="5s" repeatCount="indefinite"/>
+            <rect x="0" y="0" width="100" height="240" fill="url(#doorPanel)" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+            <rect x="10" y="15" width="80" height="95" fill="none" stroke="rgba(255,255,255,.12)" rx="2"/>
+            <rect x="10" y="125" width="80" height="100" fill="none" stroke="rgba(255,255,255,.12)" rx="2"/>
+            <rect x="92" y="115" width="4" height="20" rx="1.5" fill="#cad6e8"/>
+          </g>
+          <!-- RIGHT door panel slides right (simple original design) -->
+          <g>
+            <animateTransform attributeName="transform" type="translate"
+              values="0 0; 0 0; 85 0; 85 0; 0 0; 0 0"
+              keyTimes="0; 0.56; 0.7; 0.8; 0.88; 1"
+              dur="5s" repeatCount="indefinite"/>
+            <rect x="100" y="0" width="100" height="240" fill="url(#doorPanel)" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+            <rect x="110" y="15" width="80" height="95" fill="none" stroke="rgba(255,255,255,.12)" rx="2"/>
+            <rect x="110" y="125" width="80" height="100" fill="none" stroke="rgba(255,255,255,.12)" rx="2"/>
+            <rect x="104" y="115" width="4" height="20" rx="1.5" fill="#cad6e8"/>
+          </g>
+        </g>
+
+        <!-- ============== READER v2 (rounded square panel with prominent NFC ring) ============== -->
+        <g transform="translate(220,140)">
+          <!-- Outer body with bevel -->
+          <rect x="0" y="0" width="100" height="180" rx="20" fill="url(#reader)" stroke="url(#readerEdge)" stroke-width="2"/>
+          <rect x="3" y="3" width="94" height="174" rx="17" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+
+          <!-- Top status pill -->
+          <rect x="40" y="12" width="20" height="3" rx="1.5" fill="#00e6ff">
+            <animate attributeName="fill" values="#00e6ff;#00e6ff;#00ff88;#00ff88;#00e6ff"
+              keyTimes="0;0.4;0.44;0.85;0.92" dur="5s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Inner screen recess -->
+          <rect x="10" y="22" width="80" height="100" rx="12" fill="url(#readerScreen)" stroke="rgba(255,255,255,.08)"/>
+
+          <!-- BIG central NFC sensing ring -->
+          <g transform="translate(50,72)">
+            <!-- outermost soft halo (animates color) -->
+            <circle r="38" fill="rgba(0,230,255,.04)" stroke="rgba(0,230,255,.18)" stroke-width="1">
+              <animate attributeName="stroke" values="rgba(0,230,255,.18);rgba(0,230,255,.18);rgba(0,255,136,.5);rgba(0,255,136,.5);rgba(0,230,255,.18)"
+                keyTimes="0;0.4;0.44;0.85;0.92" dur="5s" repeatCount="indefinite"/>
+            </circle>
+            <!-- mid ring -->
+            <circle r="30" fill="rgba(0,230,255,.06)" stroke="rgba(0,230,255,.4)" stroke-width="1.5">
+              <animate attributeName="stroke" values="rgba(0,230,255,.4);rgba(0,230,255,.4);rgba(0,255,136,.85);rgba(0,255,136,.85);rgba(0,230,255,.4)"
+                keyTimes="0;0.4;0.44;0.85;0.92" dur="5s" repeatCount="indefinite"/>
+            </circle>
+            <!-- inner ring -->
+            <circle r="22" fill="rgba(0,230,255,.08)" stroke="rgba(0,230,255,.6)" stroke-width="1.6">
+              <animate attributeName="stroke" values="rgba(0,230,255,.6);rgba(0,230,255,.6);rgba(0,255,136,1);rgba(0,255,136,1);rgba(0,230,255,.6)"
+                keyTimes="0;0.4;0.44;0.85;0.92" dur="5s" repeatCount="indefinite"/>
+            </circle>
+            <!-- glowing core -->
+            <circle r="14" fill="url(#nfcCenter)"/>
+            <!-- Wifi/NFC icon at center -->
+            <g stroke="#fff" stroke-width="1.7" fill="none" stroke-linecap="round" opacity=".95">
+              <path d="M -10 2 q 10 -10 20 0"/>
+              <path d="M -6 6 q 6 -6 12 0"/>
+              <circle cx="0" cy="9" r="1.5" fill="#fff" stroke="none"/>
+            </g>
+            <!-- subtle "tap me" pulsing dot during idle -->
+            <circle r="14" fill="none" stroke="#7df0ff" stroke-width="1">
+              <animate attributeName="r" values="14;22;14" keyTimes="0;0.5;1" dur="2s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.6;0;0.6" keyTimes="0;0.5;1" dur="2s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+
+          <!-- Bottom display panel -->
+          <rect x="10" y="132" width="80" height="38" rx="8" fill="rgba(0,0,0,.45)" stroke="rgba(255,255,255,.08)"/>
+          <!-- ACCESS / GRANTED -->
+          <text x="50" y="148" text-anchor="middle" font-size="10" fill="#fff" font-family="sans-serif" font-weight="700" letter-spacing="2.5">
+            <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.4;0.45;0.85;0.92" dur="5s" repeatCount="indefinite"/>
+            ACCESS
+          </text>
+          <text x="50" y="148" text-anchor="middle" font-size="10" fill="#00ff88" font-family="sans-serif" font-weight="700" letter-spacing="2.5" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.4;0.45;0.85;0.92" dur="5s" repeatCount="indefinite"/>
+            GRANTED
+          </text>
+          <!-- status -->
+          <text x="50" y="162" text-anchor="middle" font-size="6.5" fill="#7df0ff" font-family="monospace" letter-spacing=".5">
+            <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.4;0.45;0.85;0.92" dur="5s" repeatCount="indefinite"/>
+            SCANNING...
+          </text>
+          <text x="50" y="162" text-anchor="middle" font-size="7" fill="#00ff88" font-family="monospace" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.4;0.45;0.85;0.92" dur="5s" repeatCount="indefinite"/>
+            OPEN ✓
+          </text>
+        </g>
+
+        <!-- ============== GREEN CHECKMARK BADGE (above reader, pops in when granted) ============== -->
+        <g transform="translate(270,100)">
+          <g>
+            <!-- scale-in pop -->
+            <animateTransform attributeName="transform" type="scale"
+              values="0; 0; 1.25; 1; 1; 0; 0"
+              keyTimes="0; 0.42; 0.46; 0.5; 0.82; 0.88; 1"
+              dur="5s" repeatCount="indefinite" additive="replace"/>
+            <!-- soft outer glow ring -->
+            <circle r="32" fill="rgba(0,255,136,.18)" stroke="#00ff88" stroke-width="1.5">
+              <animate attributeName="r" values="22;38;32;32;32" keyTimes="0;0.05;0.1;0.85;1" dur="5s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0;0.7;0.5;0.5;0" keyTimes="0;0.05;0.1;0.85;1" dur="5s" repeatCount="indefinite"/>
+            </circle>
+            <!-- main badge -->
+            <circle r="22" fill="#00ff88" stroke="#7dffc0" stroke-width="2"/>
+            <!-- big checkmark -->
+            <path d="M -10 0 L -3 8 L 12 -8" fill="none" stroke="#00321a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </g>
+
+        <!-- ============== PHONE (LEFT side, upper-half tilts LEFT -10°, bottom swings RIGHT to approach reader) ============== -->
+        <!-- OUTER group: slight rightward translation -->
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="20 80; 20 80; 75 80; 75 80; 20 80; 20 80"
+            keyTimes="0; 0.1; 0.24; 0.8; 0.9; 1"
+            dur="5s" repeatCount="indefinite"/>
+          <!-- INNER group: tilt -10° CCW (upper part leans LEFT) around upper-pivot, so bottom swings RIGHT toward reader -->
+          <g>
+            <animateTransform attributeName="transform" type="rotate"
+              values="0 70 100; 0 70 100; -10 70 100; -10 70 100; 0 70 100; 0 70 100"
+              keyTimes="0; 0.1; 0.24; 0.8; 0.9; 1"
+              dur="5s" repeatCount="indefinite"/>
+            <!-- shadow -->
+            <rect x="6" y="14" width="140" height="295" rx="30" fill="#000" opacity=".5"/>
+            <!-- transparent case -->
+            <rect x="0" y="0" width="140" height="295" rx="30" fill="url(#phoneCase)" stroke="url(#caseEdge)" stroke-width="2"/>
+            <rect x="6" y="6" width="128" height="283" rx="26" fill="rgba(20,30,60,.18)" stroke="rgba(255,255,255,.18)"/>
+            <!-- camera island top-left -->
+            <rect x="14" y="14" width="55" height="55" rx="13" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.32)" stroke-width="1.4"/>
+            <circle cx="30" cy="30" r="10" fill="#0a1020" stroke="rgba(255,255,255,.4)" stroke-width="1.2"/>
+            <circle cx="30" cy="30" r="5" fill="#1a2840"/>
+            <circle cx="28" cy="28" r="2" fill="#7df0ff" opacity=".6"/>
+            <circle cx="53" cy="30" r="8" fill="#0a1020" stroke="rgba(255,255,255,.4)" stroke-width="1.2"/>
+            <circle cx="53" cy="30" r="4" fill="#1a2840"/>
+            <circle cx="42" cy="53" r="7" fill="#0a1020" stroke="rgba(255,255,255,.4)" stroke-width="1.2"/>
+            <circle cx="42" cy="53" r="3.5" fill="#1a2840"/>
+            <circle cx="60" cy="53" r="2.5" fill="rgba(255,255,255,.3)"/>
+            <path d="M14 14 q30 -3 60 6 t75 -2" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+
+            <!-- ★ STICKER: bottom-RIGHT of back (faces reader on right), glows when sensing -->
+            <g transform="translate(105,240)">
+              <!-- pulse glow halo (intensifies during approach + sensing) -->
+              <circle r="18" fill="#00e6ff" opacity="0">
+                <animate attributeName="r" values="18;18;30;42;30;18;18"
+                  keyTimes="0;0.1;0.2;0.32;0.4;0.5;1" dur="5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0;0;0.5;0.7;0.4;0;0"
+                  keyTimes="0;0.1;0.2;0.32;0.4;0.5;1" dur="5s" repeatCount="indefinite"/>
+              </circle>
+              <!-- silver sticker -->
+              <circle r="18" fill="url(#sticker)" stroke="rgba(255,255,255,.65)" stroke-width="1.2"/>
+              <circle r="18" fill="none" stroke="rgba(255,255,255,.35)" stroke-dasharray="1.5 3"/>
+              <circle r="12" fill="none" stroke="rgba(255,255,255,.25)"/>
+              <circle r="6" fill="none" stroke="rgba(255,255,255,.3)"/>
+              <circle r="2" fill="rgba(255,255,255,.45)"/>
+              <!-- sensing arc (tiny short waves at sticker) -->
+              <circle r="22" fill="none" stroke="#00e6ff" stroke-width="2" opacity="0">
+                <animate attributeName="r" values="18;18;22;30;30" keyTimes="0;0.22;0.28;0.36;1" dur="5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0;0;0.9;0;0" keyTimes="0;0.22;0.28;0.36;1" dur="5s" repeatCount="indefinite"/>
+              </circle>
+            </g>
+          </g>
+        </g>
+
+        <!-- ============== SENSING WAVES — multi-ripple "wobble" effect from sticker towards reader ============== -->
+        <!-- Sticker approached absolute position ≈ (204, 312) -->
+        <g transform="translate(204,312)">
+          <!-- Wave 1: emanates 0.20→0.34 of cycle -->
+          <path fill="none" stroke="#00e6ff" stroke-width="3" stroke-linecap="round">
+            <animate attributeName="d"
+              values="M 0 -8 A 8 8 0 0 1 0 8;
+                      M 0 -8 A 8 8 0 0 1 0 8;
+                      M 0 -45 A 45 45 0 0 1 0 45;
+                      M 0 -85 A 85 85 0 0 1 0 85;
+                      M 0 -85 A 85 85 0 0 1 0 85"
+              keyTimes="0;0.20;0.27;0.34;1" dur="5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0;1;0;0"
+              keyTimes="0;0.20;0.27;0.34;1" dur="5s" repeatCount="indefinite"/>
+            <animate attributeName="stroke-width" values="3.5;3.5;2.5;0.8;0.8"
+              keyTimes="0;0.20;0.27;0.34;1" dur="5s" repeatCount="indefinite"/>
+          </path>
+          <!-- Wave 2: 0.24→0.38 of cycle -->
+          <path fill="none" stroke="#00e6ff" stroke-width="3" stroke-linecap="round">
+            <animate attributeName="d"
+              values="M 0 -8 A 8 8 0 0 1 0 8;
+                      M 0 -8 A 8 8 0 0 1 0 8;
+                      M 0 -45 A 45 45 0 0 1 0 45;
+                      M 0 -85 A 85 85 0 0 1 0 85;
+                      M 0 -85 A 85 85 0 0 1 0 85"
+              keyTimes="0;0.24;0.31;0.38;1" dur="5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0;1;0;0"
+              keyTimes="0;0.24;0.31;0.38;1" dur="5s" repeatCount="indefinite"/>
+            <animate attributeName="stroke-width" values="3;3;2;0.8;0.8"
+              keyTimes="0;0.24;0.31;0.38;1" dur="5s" repeatCount="indefinite"/>
+          </path>
+          <!-- Wave 3: 0.28→0.42 of cycle -->
+          <path fill="none" stroke="#7df0ff" stroke-width="3" stroke-linecap="round">
+            <animate attributeName="d"
+              values="M 0 -8 A 8 8 0 0 1 0 8;
+                      M 0 -8 A 8 8 0 0 1 0 8;
+                      M 0 -45 A 45 45 0 0 1 0 45;
+                      M 0 -85 A 85 85 0 0 1 0 85;
+                      M 0 -85 A 85 85 0 0 1 0 85"
+              keyTimes="0;0.28;0.35;0.42;1" dur="5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0;0.9;0;0"
+              keyTimes="0;0.28;0.35;0.42;1" dur="5s" repeatCount="indefinite"/>
+            <animate attributeName="stroke-width" values="2.5;2.5;1.8;0.6;0.6"
+              keyTimes="0;0.28;0.35;0.42;1" dur="5s" repeatCount="indefinite"/>
+          </path>
+          <!-- subtle "wobble" oscillating dot at sensing point on reader (small bouncing ring) -->
+          <g transform="translate(40,-100)" opacity="0">
+            <animate attributeName="opacity" values="0;0;0.9;0.9;0;0"
+              keyTimes="0;0.26;0.3;0.4;0.44;1" dur="5s" repeatCount="indefinite"/>
+            <circle r="6" fill="rgba(0,230,255,.35)" stroke="#7df0ff" stroke-width="1.5">
+              <animate attributeName="r" values="5;9;5;9;5;9;5"
+                keyTimes="0;0.17;0.33;0.5;0.66;0.83;1" dur="0.9s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+        </g>
+
+        <!-- floating spec tag -->
+        <g transform="translate(20,425)">
+          <rect x="-2" y="-2" width="220" height="32" rx="8" fill="rgba(0,230,255,.12)" stroke="rgba(0,230,255,.5)"/>
+          <text x="108" y="20" text-anchor="middle" font-size="11" fill="#a3f1ff" font-family="sans-serif" font-weight="600">超薄貼片 ≈ 0.8mm｜貼於手機背面右下角</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="sec-head reveal">
+      <span class="pill">產品優勢</span>
+      <h2>為什麼選擇超薄整合貼片</h2>
+      <p>不換手機殼、不破壞外觀、不影響充電，直接讓你的手機變成門禁卡。</p>
+    </div>
+    <div class="features">
+      <div class="feature reveal">
+        <div class="icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="6" y1="6" x2="18" y2="6"/></svg>
+        </div>
+        <h3>超薄輕巧</h3>
+        <p>厚度僅約 0.8mm，可直接貼合手機背面或卡夾，不影響日常使用。</p>
+      </div>
+      <div class="feature reveal">
+        <div class="icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3>攜帶方便</h3>
+        <p>少帶一張卡、少一個鑰匙圈，出門口袋更清爽，減少遺失風險。</p>
+      </div>
+      <div class="feature reveal">
+        <div class="icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h2M20 12h2M12 2v2M12 20v2"/><circle cx="12" cy="12" r="5"/></svg>
+        </div>
+        <h3>感應穩定</h3>
+        <p>貼近讀卡機即可快速感應，反應靈敏，與原磁扣使用體驗一致。</p>
+      </div>
+      <div class="feature reveal">
+        <div class="icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+        <h3>使用簡單</h3>
+        <p>專業整合服務，直接貼上手機即可使用，無需額外 App 或設定。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="sec-head reveal">
+      <span class="pill">價目表</span>
+      <h2>透明價格・揪團更划算</h2>
+      <p>均一價，不分品牌型號（需先確認規格相容性）。</p>
+    </div>
+    <div class="pricing-wrap">
+      <div class="price-card reveal">
+        <div class="label">★ 超薄型感應貼紙</div>
+        <h3>輕薄、方便、好攜帶</h3>
+        <div class="price">
+          <span class="num">NT$200</span>
+          <span class="unit">／ 片（均一價）</span>
+        </div>
+        <p class="desc">一片即可整合一組門禁授權，多組門禁可分開報價。</p>
+        <ul class="price-list">
+          <li>0.8mm 超薄貼片，貼合手機不突兀</li>
+          <li>圓形低調設計，無明顯 logo</li>
+          <li>大台北區同一地址金額滿 NT$1,000 提供到府服務</li>
+          <li>新社區、大樓住戶歡迎揪團辦理，可洽團購優惠</li>
+        </ul>
+        <div class="cta-row">
+          <a class="btn btn-ig" href="https://www.instagram.com/iseeic.tw/" target="_blank" rel="noopener">IG 私訊 @iseeic.tw</a>
+          <a class="btn btn-line" href="#contact">LINE 詢問</a>
+        </div>
+      </div>
+
+      <div class="info-card reveal">
+        <h4>服務資訊</h4>
+        <div class="info-block">
+          <div class="t">到府服務</div>
+          <div class="d">大台北區同一地址金額滿 NT$1,000，提供到府整合服務。</div>
+        </div>
+        <div class="info-block">
+          <div class="t">揪團方案</div>
+          <div class="d">歡迎新社區、大樓住戶揪團辦理；團購需求歡迎私訊洽詢報價。</div>
+        </div>
+        <div class="info-block">
+          <div class="t">合法使用</div>
+          <div class="d">僅適用於經授權的門禁憑證與合法用途，使用前請先確認規格與相容性。</div>
+        </div>
+        <div class="info-block">
+          <div class="t">付款方式</div>
+          <div class="d">現場現金、轉帳，到府服務於整合完成後收款。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section id="contact" style="padding-top:20px;">
+    <div class="cta-band reveal">
+      <h2>準備好讓手機變成你的門禁卡了嗎？</h2>
+      <p>私訊告訴我你的門禁類型，30 秒內回覆相容性。</p>
+      <div class="cta-row">
+        <!-- IG：iseeic.tw -->
+        <a class="btn btn-ig" href="https://www.instagram.com/iseeic.tw/" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          私訊 IG @iseeic.tw
+        </a>
+        <!-- 將下方 # 換成你的 LINE 加好友連結，例如 https://line.me/R/ti/p/@yourID -->
+        <a class="btn btn-line" href="#" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596a.62.62 0 0 1-.197.033c-.21 0-.4-.117-.51-.281l-2.443-3.317v2.969a.629.629 0 0 1-.629.628.627.627 0 0 1-.626-.628V8.108c0-.27.173-.51.43-.595a.625.625 0 0 1 .195-.033c.196 0 .397.105.508.275l2.443 3.32V8.108a.629.629 0 0 1 .628-.63c.345 0 .628.285.628.63v4.771zm-5.741 0a.627.627 0 0 1-.626.628.629.629 0 0 1-.63-.628V8.108c0-.345.282-.63.63-.63.346 0 .626.285.626.63v4.771zm-2.466.628H4.917a.625.625 0 0 1-.625-.628V8.108c0-.345.281-.63.625-.63.346 0 .628.285.628.63v4.141h1.756c.348 0 .629.283.629.63a.627.627 0 0 1-.629.628M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+          加入 LINE 好友
+        </a>
+      </div>
+      <div class="notice">
+        <span>⚠</span>
+        <div><b>使用提醒：</b>本服務僅適用於經授權的門禁憑證與合法用途，使用前請先確認門禁規格、頻率與相容性。如不確定，私訊我們協助評估。</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="brand">
+    <div class="brand-mark"></div>
+    <div class="brand-name">iseeic<span>.tw</span></div>
+  </div>
+  <div>© 2026 iseeic.tw 超薄門禁整合服務｜大台北地區｜
+    <a href="https://www.instagram.com/iseeic.tw/" target="_blank" rel="noopener" style="color:var(--cyan-soft);">@iseeic.tw</a>
+  </div>
+  <div style="margin-top:6px;opacity:.6;">本網頁所提供之服務僅適用於合法授權用途</div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      const id = a.getAttribute('href');
+      if(id.length>1){
+        const el = document.querySelector(id);
+        if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'}); }
+      }
+    });
+  });
+</script>
+</body>
+</html>

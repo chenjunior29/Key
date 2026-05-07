@@ -191,7 +191,12 @@
   .spec-row{
     display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;
   }
-  @media(max-width:720px){.spec-row{grid-template-columns:repeat(3,1fr);gap:10px;}}
+  @media(max-width:720px){
+    .spec-row{grid-template-columns:repeat(3,1fr);gap:8px;}
+    .spec{padding:10px 6px;}
+    .spec b{font-size:14px;}
+    .spec span{font-size:10px;display:block;word-break:keep-all;overflow-wrap:break-word;}
+  }
   .spec{
     border:1px solid var(--line);border-radius:14px;padding:14px;
     background:rgba(10,20,48,.45);
@@ -292,9 +297,9 @@
   }
   .price-card .label{color:var(--cyan-soft);font-size:13px;letter-spacing:2px;font-weight:700;}
   .price-card h3{font-size:26px;margin:8px 0 14px;}
-  .price-card .price{display:flex;align-items:baseline;gap:8px;margin:10px 0 18px;}
-  .price-card .price .num{font-size:64px;font-weight:900;background:linear-gradient(120deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;}
-  .price-card .price .unit{color:var(--muted);font-size:16px;}
+  .price-card .price{display:flex;align-items:baseline;gap:8px;margin:10px 0 18px;flex-wrap:wrap;}
+  .price-card .price .num{font-size:clamp(48px,12vw,64px);font-weight:900;background:linear-gradient(120deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap;}
+  .price-card .price .unit{color:var(--muted);font-size:16px;white-space:nowrap;}
   .price-card .desc{color:var(--muted);margin-bottom:20px;}
   .price-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
   .price-list li{display:flex;align-items:flex-start;gap:10px;color:#dbe7ff;}
@@ -330,6 +335,11 @@
   .cta-band p{color:#cfe2ff;margin-bottom:24px;}
   .cta-band .cta-row{justify-content:center;}
   @media(max-width:720px){.cta-band{padding:36px 22px;}}
+  @media(max-width:520px){
+    .price-card{padding:24px 20px;}
+    .price-card h3{font-size:20px;}
+    .price-card .price .unit{font-size:14px;}
+  }
 
   /* FAQ-ish notice */
   .notice{

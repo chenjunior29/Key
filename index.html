@@ -139,7 +139,7 @@
   }
   .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
 
-  .hero-meta{display:flex;flex-wrap:wrap;gap:22px;color:var(--muted);font-size:14px;}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:22px;color:var(--muted);font-size:16px;}
   .hero-meta b{color:#fff;}
 
   /* Phone illustration */
@@ -193,17 +193,17 @@
   }
   @media(max-width:720px){
     .spec-row{grid-template-columns:repeat(3,1fr);gap:8px;}
-    .spec{padding:10px 6px;}
-    .spec b{font-size:14px;}
-    .spec span{font-size:10px;display:block;word-break:keep-all;overflow-wrap:break-word;}
+    .spec{padding:12px 6px;}
+    .spec b{font-size:17px;}
+    .spec span{font-size:12px;display:block;word-break:keep-all;overflow-wrap:break-word;}
   }
   .spec{
     border:1px solid var(--line);border-radius:14px;padding:14px;
     background:rgba(10,20,48,.45);
     text-align:center;
   }
-  .spec b{display:block;color:var(--cyan);font-size:18px;}
-  .spec span{color:var(--muted);font-size:12px;}
+  .spec b{display:block;color:var(--cyan);font-size:20px;}
+  .spec span{color:var(--muted);font-size:13px;}
 
   /* Section heading */
   .sec-head{text-align:center;margin-bottom:50px;}
@@ -476,6 +476,9 @@
             <stop offset=".5" stop-color="#050a1a"/>
             <stop offset="1" stop-color="#0a1130"/>
           </linearGradient>
+          <marker id="arrowHead" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
+            <path d="M 0 1.5 L 6 4 L 0 6.5 Z" fill="#00e6ff"/>
+          </marker>
         </defs>
 
         <!-- ============== DOOR (RIGHT side, slides open to reveal ISEEIC logo) ============== -->
@@ -729,6 +732,8 @@
                 <animate attributeName="opacity" values="0;0;0.5;0.7;0.4;0;0"
                   keyTimes="0;0.1;0.2;0.32;0.4;0.5;1" dur="5s" repeatCount="indefinite"/>
               </circle>
+              <!-- invisible tracking anchor for JS arrow -->
+              <circle id="stickerDot" r="1" fill="none" stroke="none"/>
               <!-- silver sticker -->
               <circle r="18" fill="url(#sticker)" stroke="rgba(255,255,255,.65)" stroke-width="1.2"/>
               <circle r="18" fill="none" stroke="rgba(255,255,255,.35)" stroke-dasharray="1.5 3"/>
@@ -800,11 +805,15 @@
           </g>
         </g>
 
-        <!-- floating spec tag -->
-        <g transform="translate(20,425)">
-          <rect x="-2" y="-2" width="220" height="32" rx="8" fill="rgba(0,230,255,.12)" stroke="rgba(0,230,255,.5)"/>
-          <text x="108" y="20" text-anchor="middle" font-size="11" fill="#a3f1ff" font-family="sans-serif" font-weight="600">超薄貼片 ≈ 0.8mm｜貼於手機背面右下角</text>
+        <!-- FIXED spec label — does NOT move with phone -->
+        <g transform="translate(15,410)">
+          <rect x="0" y="0" width="220" height="66" rx="10" fill="rgba(0,230,255,.12)" stroke="rgba(0,230,255,.5)" stroke-width="2"/>
+          <text x="110" y="24" text-anchor="middle" font-size="16" fill="#a3f1ff" font-family="sans-serif" font-weight="700">超薄貼片 ≈ 0.8mm</text>
+          <text x="110" y="48" text-anchor="middle" font-size="16" fill="#a3f1ff" font-family="sans-serif" font-weight="700">貼於手機背面右下角</text>
         </g>
+        <!-- Arrow: starts from label top-right area (SVG coords ~220,430), end updated by JS -->
+        <path id="stickerArrow" d="" fill="none" stroke="#00e6ff" stroke-width="1.8" stroke-linecap="round" marker-end="url(#arrowHead)"/>
+
       </svg>
     </div>
   </section>
@@ -943,7 +952,31 @@
   },{threshold:.12});
   document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-  // Smooth scroll for anchor links
+  // Arrow tracking: anchor from fixed label → animated sticker
+  (function(){
+    const dot = document.getElementById('stickerDot');
+    const arrow = document.getElementById('stickerArrow');
+    const svg = arrow ? arrow.closest('svg') : null;
+    if(!dot || !arrow || !svg) return;
+    function toSVGCoords(el){
+      const pt = svg.createSVGPoint();
+      const rect = el.getBoundingClientRect();
+      pt.x = rect.left + rect.width/2;
+      pt.y = rect.top + rect.height/2;
+      return pt.matrixTransform(svg.getScreenCTM().inverse());
+    }
+    // Label right-edge center in SVG coords: translate(30,430), width=190, height=44 → right-edge x=220, mid-y=452
+    const lx = 125, ly = 410; // label top-center
+    function update(){
+      const t = toSVGCoords(dot);
+      // Bezier: start from label top-center, curve up to sticker
+      const cx1 = lx, cy1 = ly - 30;
+      const cx2 = t.x + 10, cy2 = t.y + 30;
+      arrow.setAttribute('d', `M ${lx} ${ly} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${t.x} ${t.y}`);
+      requestAnimationFrame(update);
+    }
+    update();
+  })();
   document.querySelectorAll('a[href^="#"]').forEach(a=>{
     a.addEventListener('click', e=>{
       const id = a.getAttribute('href');
